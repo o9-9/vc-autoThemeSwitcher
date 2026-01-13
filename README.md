@@ -4,7 +4,7 @@ A plugin for [Vencord, a Discord client mod](https://vencord.dev) that automatic
 
 [Original plugin by Maddie480](https://github.com/maddie480/Vencord-AutoThemeSwitcher) and includes [system appearance code from adorabilis' fork.](https://github.com/adorabilis/Vencord-SystemThemeSwitcher/)
 
-<div><img width="500" height="auto" alt="plugin time" src="https://github.com/user-attachments/assets/531c8b4d-01d3-4894-9d80-005715d12eed" /><img width="500" height="auto" alt="plugin system" src="https://github.com/user-attachments/assets/2245f365-c127-4f25-a160-01faa0a2ac6f" /> </div>
+<div><img style="width: 50%" height="auto" alt="plugin time" src="https://github.com/user-attachments/assets/531c8b4d-01d3-4894-9d80-005715d12eed" /><img style="width: 50%" height="auto" alt="plugin system" src="https://github.com/user-attachments/assets/2245f365-c127-4f25-a160-01faa0a2ac6f" /> </div>
 
 ## Installing the plugin
 

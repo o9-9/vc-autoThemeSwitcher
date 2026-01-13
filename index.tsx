@@ -126,7 +126,7 @@ export default definePlugin({
         mediaQueryList = window.matchMedia("(prefers-color-scheme: dark)");
         mediaQueryList.addEventListener("change", handleSystemThemeChange);
         updateTheme();
-        intervalHandle = setInterval(periodicThemeUpdateCheck, 1000);
+        intervalHandle = setInterval(periodicThemeUpdateCheck, 60000);
         pluginStarted = true;
     },
     stop() {

@@ -64,9 +64,9 @@ export function changeDiscordTheme(theme: string | CustomTheme) {
         saveClientTheme(theme);
         logger.info("Discord Theme changed to", theme);
     }
-    //If anything else, it is an error
+    // If anything else, it is an error
     else {
-        throw new Error ("Invalid theme request.");
+        throw new Error("Invalid theme request.");
     }
 }
 

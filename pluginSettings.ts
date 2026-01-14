@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { definePluginSettings, Settings } from "@api/Settings";
+import { definePluginSettings } from "@api/Settings";
 import { proxyLazy } from "@utils/lazy";
 import { OptionType, SettingsDefinition } from "@utils/types";
 
 import { ThemeLinksComponent } from "./themeLinksComponent";
-import { timeComponent } from "./timeComponent";
 import * as themeLister from "./themeLister";
+import { timeComponent } from "./timeComponent";
 import { ToggledTheme } from "./types";
 
 /**
@@ -58,7 +58,7 @@ export function getPluginSettings(onChange: () => void) {
     const lightThemeSettings = getToggledThemeSettings(ToggledTheme.Light, onChange);
     const darkThemeSettings = getToggledThemeSettings(ToggledTheme.Dark, onChange);
 
-    let settings = definePluginSettings({
+    const settings = definePluginSettings({
 
         ChangeBasedOnSystemAppearance: {
             type: OptionType.BOOLEAN,

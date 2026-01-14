@@ -5,15 +5,15 @@
  */
 
 import definePlugin, { StartAt } from "@utils/types";
+import { findStore } from "@webpack";
 
 import * as pluginSettings from "./pluginSettings";
 import * as themeScheduler from "./themeScheduler";
 import * as themeToggler from "./themeToggler";
 import { CtStore, CustomTheme, ToggledTheme } from "./types";
-import { findStore } from "@webpack";
 
 // Import settings immediately
-let settings = pluginSettings.getPluginSettings(onChange);
+const settings = pluginSettings.getPluginSettings(onChange);
 
 let currentTheme: ToggledTheme | null = null;
 let intervalHandle: NodeJS.Timeout | null = null;
@@ -47,19 +47,18 @@ function updateTheme(isDark?: boolean) {
     if (settings.store.ChangeBasedOnSystemAppearance) {
         // System appearance
         expectedTheme = isDark ? ToggledTheme.Dark : ToggledTheme.Light;
-    }
-    else {
+    } else {
         // Time of day
         expectedTheme = themeScheduler.getExpectedTheme(settings.store.lightThemeStartTime, settings.store.darkThemeStartTime);
     }
 
     let discordTheme: string | CustomTheme = expectedTheme === ToggledTheme.Dark ? settings.store.darkTheme : settings.store.lightTheme;
 
-    //Set the theme property if this is the custom Nitro theme
-    if (discordTheme == "customnitro") {
-        //Get custom theme information from the store
-        let customThemeStore: CtStore = findStore("SavedCustomThemeStore") as CtStore;
-        let themeInfo: CustomTheme = { theme: "dark", customUserThemeSettings: customThemeStore.getSavedCustomTheme() };
+    // Set the theme property if this is the custom Nitro theme
+    if (discordTheme === "customnitro") {
+        // Get custom theme information from the store
+        const customThemeStore: CtStore = findStore("SavedCustomThemeStore") as CtStore;
+        const themeInfo: CustomTheme = { theme: "dark", customUserThemeSettings: customThemeStore.getSavedCustomTheme() };
 
         // Set if the custom theme should be light or dark and return it
         if (expectedTheme === ToggledTheme.Dark) {
@@ -122,7 +121,7 @@ export default definePlugin({
     settings,
     startAt: StartAt.WebpackReady,
     start() {
-        //Start system listeners and periodic checks along with changing the theme
+        // Start system listeners and periodic checks along with changing the theme
         mediaQueryList = window.matchMedia("(prefers-color-scheme: dark)");
         mediaQueryList.addEventListener("change", handleSystemThemeChange);
         updateTheme();

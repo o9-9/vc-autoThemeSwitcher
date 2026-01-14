@@ -7,6 +7,7 @@
 import { getIntlMessage } from "@utils/discord";
 import { PluginSettingSelectOption } from "@utils/types";
 import { mapMangledModuleLazy } from "@webpack";
+
 import * as themeToggler from "./themeToggler";
 import { DiscordTheme, ToggledTheme } from "./types";
 
@@ -23,13 +24,11 @@ const nitroThemeList: { themes: Array<DiscordTheme>; } = mapMangledModuleLazy(",
  * @returns The options for a dropdown that contains Light, Dark and all Nitro themes
  */
 export function getSelectOptions(defaultValue: ToggledTheme): PluginSettingSelectOption[] {
-    let list: ({
+    const list: ({
         label: string;
         value: string;
-        default: boolean
-    })[];
-
-    list = [...classicThemeList, ...nitroThemeList.themes,].map(theme => ({
+        default: boolean;
+    })[] = [...classicThemeList, ...nitroThemeList.themes,].map(theme => ({
         label: theme.getName(),
         value: themeToggler.themeToString(theme),
         default: false

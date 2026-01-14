@@ -5,7 +5,7 @@
  */
 
 import { Settings } from "@api/Settings";
-import { SettingsSection, resolveError } from "@components/settings/tabs/plugins/components/Common";
+import { resolveError,SettingsSection } from "@components/settings/tabs/plugins/components/Common";
 import { IPluginOptionComponentProps } from "@utils/types";
 import { React, TextArea } from "@webpack/common";
 
@@ -25,7 +25,7 @@ export function ThemeLinksComponent({ setValue }: IPluginOptionComponentProps, i
     function regexValidateCheck(newValue: string) {
         const URLRegex = /^(http[s]?:\/\/[^\s]+\.css)$/;
         return newValue.match(URLRegex) !== null;
-    };
+    }
 
 
     // Internal function to handle changes in the value
@@ -33,7 +33,7 @@ export function ThemeLinksComponent({ setValue }: IPluginOptionComponentProps, i
         // Check validity on our own terms
         // This behemoth of a line checks every newline if it is a URL, removes newline characters, then returns true if all newline URLs are valid, false otherwise
         const isValid = (newValue.split(/(\r?\n)/)
-            .filter((line) => ["\n", ""].indexOf(line) < 0)
+            .filter(line => ["\n", ""].indexOf(line) < 0)
             .map((line: string) => regexValidateCheck(line)))
             .every(value => value);
 

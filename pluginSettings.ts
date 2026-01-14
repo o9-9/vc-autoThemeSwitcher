@@ -4,24 +4,33 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { definePluginSettings } from "@api/Settings";
+import { definePluginSettings, Settings } from "@api/Settings";
 import { proxyLazy } from "@utils/lazy";
 import { OptionType, SettingsDefinition } from "@utils/types";
 
 import { ThemeLinksComponent } from "./themeLinksComponent";
+import { timeComponent } from "./timeComponent";
 import * as themeLister from "./themeLister";
 import { ToggledTheme } from "./types";
 
+/**
+ * @param theme The ToggledTheme enum that represents changing to a light theme or dark theme
+ * @param onChange The onChange method from index.tsx
+ * @returns The settings that should be used depending on if the theme is light or dark
+ */
 function getToggledThemeSettings(theme: ToggledTheme, onChange: () => void): SettingsDefinition {
-    const themeName = theme === ToggledTheme.Light ? "Light Theme" : "Dark Theme";
     const defaultStartTime = theme === ToggledTheme.Light ? "08:00" : "20:00";
-
     return {
         themeStartTime: {
-            description: `In HH:MM format. For example: ${defaultStartTime}`,
-            type: OptionType.STRING,
-            default: defaultStartTime,
-            onChange
+            type: OptionType.COMPONENT,
+            onChange,
+            // TimeComponent is necessary, see TimeComponent.tsx
+            component: props => timeComponent(
+                props,
+                theme === ToggledTheme.Light ? "lightThemeStartTime" : "darkThemeStartTime",
+                defaultStartTime,
+                `In HH:MM format. For example: ${defaultStartTime}`,
+            )
         },
         theme: {
             description: "",
@@ -34,35 +43,35 @@ function getToggledThemeSettings(theme: ToggledTheme, onChange: () => void): Set
             onChange,
             component: props => ThemeLinksComponent(
                 props,
-                theme === ToggledTheme.Light ? "lightThemeURLs" : "darkThemeURLs",
-                `${themeName} CSS URLs (1 per line)`
+                theme === ToggledTheme.Light ? "lightThemeURLS" : "darkThemeURLS",
+                "One per line, HTTP or HTTPS only"
             ),
         },
     };
 }
 
-const timeRegex = /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/;
-
-function regexValidateCheck() {
-    return {
-        isValid: (newValue: string) => newValue.match(timeRegex) !== null
-    };
-}
-
+/**
+ * @param @param onChange The onChange method from index.tsx
+ * @returns The DefinedSettings, ie the fully configured settings, of the plugin
+ */
 export function getPluginSettings(onChange: () => void) {
     const lightThemeSettings = getToggledThemeSettings(ToggledTheme.Light, onChange);
     const darkThemeSettings = getToggledThemeSettings(ToggledTheme.Dark, onChange);
 
-    const settings = definePluginSettings({
+    let settings = definePluginSettings({
+
+        ChangeBasedOnSystemAppearance: {
+            type: OptionType.BOOLEAN,
+            description: "Select this to switch between custom light and dark themes based on your system appearance settings rather than the time of day.",
+            default: false,
+            onChange
+        },
         lightThemeStartTime: lightThemeSettings.themeStartTime,
         lightTheme: lightThemeSettings.theme,
         lightThemeURLs: lightThemeSettings.themeURLs,
         darkThemeStartTime: darkThemeSettings.themeStartTime,
         darkTheme: darkThemeSettings.theme,
-        darkThemeURLs: darkThemeSettings.themeURLs,
-    }, {
-        lightThemeStartTime: regexValidateCheck(),
-        darkThemeStartTime: regexValidateCheck(),
+        darkThemeURLs: darkThemeSettings.themeURLs
     });
 
     return settings;

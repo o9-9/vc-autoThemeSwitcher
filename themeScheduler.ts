@@ -6,6 +6,10 @@
 
 import { ToggledTheme } from "./types";
 
+/**
+ * @param time Properly formatted time string
+ * @returns How many minutes after midnight the time parameter is (ex. 01:30 is 90 minutes after midnight)
+ */
 function getMinutesFromMidnight(time: string) {
     // time is necessarily in HH:MM format
     const separatedTime = time.split(":");

@@ -5,13 +5,18 @@
  */
 
 import { definePluginSettings } from "@api/Settings";
-import { proxyLazy } from "@utils/lazy";
-import { OptionType, SettingsDefinition } from "@utils/types";
+import { OptionType, PluginSettingSelectOption, SettingsDefinition } from "@utils/types";
+import { onceReady } from "@webpack";
 
 import { ThemeLinksComponent } from "./themeLinksComponent";
 import * as themeLister from "./themeLister";
 import { timeComponent } from "./timeComponent";
 import { ToggledTheme } from "./types";
+
+const themeLists: Record<ToggledTheme, PluginSettingSelectOption[]> = {
+    [ToggledTheme.Light]: [],
+    [ToggledTheme.Dark]: [],
+};
 
 /**
  * @param theme The ToggledTheme enum that represents changing to a light theme or dark theme
@@ -35,7 +40,7 @@ function getToggledThemeSettings(theme: ToggledTheme, onChange: () => void): Set
         theme: {
             description: "",
             type: OptionType.SELECT,
-            options: proxyLazy(() => themeLister.getSelectOptions(theme)),
+            options: themeLists[theme],
             onChange
         },
         themeURLs: {
@@ -50,8 +55,19 @@ function getToggledThemeSettings(theme: ToggledTheme, onChange: () => void): Set
     };
 }
 
+async function initializeListsInThemeSettingsWhenReady() {
+    await onceReady;
+    debugger;
+
+    Object.entries(themeLists).forEach(([theme, list]) => {
+        // we're guaranteed that theme is ToggledTheme because of themeLists's type, silly TypeScript
+        const themes = themeLister.getSelectOptions(theme as unknown as ToggledTheme);
+        themes.forEach(t => list.push(t));
+    });
+}
+
 /**
- * @param @param onChange The onChange method from index.tsx
+ * @param onChange The onChange method from index.tsx
  * @returns The DefinedSettings, ie the fully configured settings, of the plugin
  */
 export function getPluginSettings(onChange: () => void) {
@@ -59,7 +75,6 @@ export function getPluginSettings(onChange: () => void) {
     const darkThemeSettings = getToggledThemeSettings(ToggledTheme.Dark, onChange);
 
     const settings = definePluginSettings({
-
         ChangeBasedOnSystemAppearance: {
             type: OptionType.BOOLEAN,
             description: "Select this to switch between custom light and dark themes based on your system appearance settings rather than the time of day.",
@@ -74,5 +89,6 @@ export function getPluginSettings(onChange: () => void) {
         darkThemeURLs: darkThemeSettings.themeURLs
     });
 
+    initializeListsInThemeSettingsWhenReady();
     return settings;
 }

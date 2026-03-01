@@ -57,7 +57,6 @@ function getToggledThemeSettings(theme: ToggledTheme, onChange: () => void): Set
 
 async function initializeListsInThemeSettingsWhenReady() {
     await onceReady;
-    debugger;
 
     Object.entries(themeLists).forEach(([theme, list]) => {
         // we're guaranteed that theme is ToggledTheme because of themeLists's type, silly TypeScript

@@ -124,7 +124,6 @@ export default definePlugin({
         // Start system listeners and periodic checks along with changing the theme
         mediaQueryList = window.matchMedia("(prefers-color-scheme: dark)");
         mediaQueryList.addEventListener("change", handleSystemThemeChange);
-        updateTheme();
         intervalHandle = setInterval(periodicThemeUpdateCheck, 60000);
         pluginStarted = true;
     },
@@ -140,5 +139,10 @@ export default definePlugin({
         }
         currentTheme = null;
         pluginStarted = false;
+    },
+    flux: {
+        CONNECTION_OPEN() {
+            updateTheme();
+        },
     }
 });
